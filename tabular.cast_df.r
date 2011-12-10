@@ -38,6 +38,14 @@ tabular.cast_df <- function(xx,...)
 	column_to_turn_into_factor <- intersect(c(ROWS, COLUMNS), colnames_m_xx)	# this removes the "1"s in case of cast(DATA, x~.) 
 	for(i in column_to_turn_into_factor) m_xx[,i] <- factor(m_xx[,i])
 
+	# Further motivation for the above two lines have been given by Duncan (on 11.12.11): 
+		# The problem here is that tabular() needs to figure out what you want to do with each variable.  value and month are both numeric, so it can't tell which one you want as an analysis variable.  temp2 is a character variable; those are also treated as possible analysis variables, but perhaps they should be treated like factors instead.  (But then there would need to be syntax to say "don't treat this character as a factor".)
+		# So another way to get what you want would be to change the table spec to
+		# tabular(value*v*factor(month)*factor(temp2) ~ variable2*result_variable, data = m_xx)
+		# but this changes the headings too; so maybe I should have a function Factor that does what factor() does without changing the heading. Here's a quick definition:
+		# Factor <- function( x ) substitute(Heading(xname)*x, list(xname = as.name(substitute(x)), x = factor(x)))
+		# tabular(value*v*Factor(month)*Factor(temp2)~variable2*result_variable, data = melt(xx), suppress=2)
+	
 	v <- function(x) x[1L]
 	txt <- paste("tabular(value*v*", LEFT , "~" ,RIGHT ,", data = m_xx, suppressLabels  = 2,...)", sep = "")
 	# suppressLabels is in order to remove the value and the v labels (which are added so to make sure the information inside the table is presented)	
@@ -78,31 +86,5 @@ tabular.cast_df(cast(aqm, month ~ variable|temp2, fun.aggregate = mean))	# stops
 tabular(month*temp2~variable2*result_variable, data = m_xx)
 tabular.cast_df(cast(aqm, month*temp2 ~ variable2, c(mean,sd))) # same problem (but this is a problem with tables not in reshape)
 tabular.cast_df(cast(aqm, month*temp2*variable2 ~ ., c(mean,sd))) # same issue
-
-
-
-########################
-######## bug (?!) report
-########################
-
-# loading libraries
-library(tables)
-library(reshape)
-
-# getting our data ready
-names(airquality) <- tolower(names(airquality))
-airquality2 <- airquality
-airquality2$temp2 <- ifelse(airquality2$temp > median(airquality2$temp), "hot", "cold")
-aqm <- melt(airquality2, id=c("month", "day","temp2"), na.rm=TRUE)
-colnames(aqm)[4] <- "variable2"	# because otherwise the function is having problem when relying on the melt function of the cast object
-head(aqm,4)
-
-xx <- cast(aqm, month*temp2 ~ variable2, c(mean,sd))
-m_xx <- melt(xx)
-for(i in c(1:5)[-3]) m_xx[,i] <- factor(m_xx[,i])	# without this line I get the following error:
-			# Error in term2table(rows[[i]], cols[[j]], data, n) : 
-			  # Duplicate values: value and month
-v <- function(x) x[1L]
-tabular(value*v*month*temp2~variable2*result_variable, data = m_xx)
 
 
