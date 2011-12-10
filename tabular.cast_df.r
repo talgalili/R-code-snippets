@@ -82,8 +82,7 @@ tabular.cast_df(cast(aqm, month ~ variable2*temp2, c(mean,sd)))
 tabular.cast_df(cast(aqm, month ~ variable|temp2, fun.aggregate = mean))	# stops the function, since it doesn't work for 3D objects...
 
 
-# "BUG"?! this one gets the "temp2" header in all of the first 4 columns.
-tabular(month*temp2~variable2*result_variable, data = m_xx)
+# "BUG" this one gets the "temp2" header in all of the first 2 columns (is was fixed in tables version 0.5.20
 tabular.cast_df(cast(aqm, month*temp2 ~ variable2, c(mean,sd))) # same problem (but this is a problem with tables not in reshape)
 tabular.cast_df(cast(aqm, month*temp2*variable2 ~ ., c(mean,sd))) # same issue
 
