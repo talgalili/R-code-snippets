@@ -53,7 +53,17 @@ tabular.cast_df <- function(xx,...)
 }
 
 
-# loading libraries
+
+
+
+
+###########################################
+###### Examples
+###########################################
+
+###### loading libraries and data
+###########################################
+
 library(tables)
 library(reshape)
 
@@ -69,21 +79,83 @@ head(aqm,4)
 # 2     5   2  cold     ozone    36
 # 3     5   3  cold     ozone    12
 
-# Examples that work:
-tabular.cast_df(cast(aqm, month ~ ., mean))
-tabular.cast_df(cast(aqm, . ~ temp2, mean))
-tabular.cast_df(cast(aqm, . ~ ., mean))
-tabular.cast_df(cast(aqm, month ~ temp2, mean))
-tabular.cast_df(cast(aqm, month ~ temp2, c(mean,sd)))
-tabular.cast_df(cast(aqm, month ~ variable2, c(mean,sd)))
-tabular.cast_df(cast(aqm, month ~ variable2*temp2, c(mean,sd)))
 
+###### Running examples:
+###########################################
+
+# Examples that work:
+
+# Trivial, but works:
+tabular.cast_df(cast(aqm, month ~ ., mean))
+# month All  
+ # 5     68.71
+ # 6     87.38
+ # 7     93.50
+ # 8     79.71
+ # 9     71.83
+
+tabular.cast_df(cast(aqm, . ~ temp2, mean))
+    # cold  hot  
+ # All 69.88 91.06
+
+tabular.cast_df(cast(aqm, . ~ ., mean))
+     # All  
+ # All 80.06
+
+tabular.cast_df(cast(aqm, month ~ temp2, mean))
+ # month cold  hot  
+ # 5     67.64 98.22
+ # 6     79.63 98.83
+ # 7     58.15 96.05
+ # 8     69.21 84.83
+ # 9     67.25 80.86
+
+ # Here starts the cool examples:
+tabular.cast_df(cast(aqm, month ~ temp2, c(mean,sd)))
+      # cold        hot         
+ # month mean  sd    mean  sd    
+ # 5     67.64 86.21 98.22 106.02
+ # 6     79.63 84.49 98.83  95.99
+ # 7     58.15 87.92 96.05  89.44
+ # 8     69.21 71.18 84.83  73.06
+ # 9     67.25 75.87 80.86  68.43
+
+tabular.cast_df(cast(aqm, month ~ variable2, c(mean,sd)))
+       # ozone       solar.r        wind         temp       
+ # month mean  sd    mean    sd     mean   sd    mean  sd   
+ # 5     23.62 22.22 181.3   115.08 11.623 3.531 65.55 6.855
+ # 6     29.44 18.21 190.2    92.88 10.267 3.769 79.10 6.599
+ # 7     59.12 31.64 216.5    80.57  8.942 3.036 83.90 4.316
+ # 8     59.96 39.68 171.9    76.83  8.794 3.226 83.97 6.585
+ # 9     31.45 24.14 167.4    79.12 10.180 3.461 76.90 8.356
+
+tabular.cast_df(cast(aqm, month ~ variable2*temp2, c(mean,sd)))
+       # ozone                    solar.r                    wind                     temp                    
+       # cold         hot         cold           hot         cold        hot          cold         hot        
+ # month mean  sd     mean  sd    mean    sd     mean  sd    mean  sd    mean   sd    mean  sd     mean  sd   
+ # 5     22.76 22.242 45.00   NaN 178.6   116.47 252.0    NA 11.51 3.538 14.900   NaN 65.03 6.3326 81.00    NA
+ # 6     20.60 10.015 40.50 21.38 170.0    97.58 220.4 79.78 10.38 4.578 10.092 2.237 74.89 3.8177 85.42 4.441
+ # 7     13.00  4.243 62.96 29.78 135.5   181.73 222.1 72.63 10.60 5.233  8.828 2.948 73.50 0.7071 84.62 3.416
+ # 8     31.75 16.360 72.50 40.80 149.7    91.19 184.2 67.26 10.88 2.819  7.800 2.970 77.00 2.2111 87.29 5.198
+ # 9     19.95  8.847 53.30 29.10 163.6    90.30 175.1 53.46 10.95 2.808  8.640 4.243 72.15 4.6257 86.40 5.420
+
+ 
 # This one doesn't work - nor should it work:
 tabular.cast_df(cast(aqm, month ~ variable|temp2, fun.aggregate = mean))	# stops the function, since it doesn't work for 3D objects...
 
-
-# "BUG" this one gets the "temp2" header in all of the first 2 columns (is was fixed in tables version 0.5.20
+####################
+# Bug that was fixed in tables version 0.5.20:
+# "BUG" this one gets the "temp2" header in all of the first 2 columns 
 tabular.cast_df(cast(aqm, month*temp2 ~ variable2, c(mean,sd))) # same problem (but this is a problem with tables not in reshape)
 tabular.cast_df(cast(aqm, month*temp2*variable2 ~ ., c(mean,sd))) # same issue
-
+ # variable2 variable2 variable2 mean    sd      
+ # 5         cold      ozone      22.760  22.2416
+                     # solar.r   178.577 116.4664
+                     # wind       11.513   3.5381
+                     # temp       65.033   6.3326
+           # hot       ozone      45.000      NaN
+                     # solar.r   252.000       NA
+                     # wind       14.900      NaN
+                     # temp       81.000       NA
+	# ......
 
