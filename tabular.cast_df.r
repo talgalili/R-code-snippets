@@ -2,6 +2,7 @@ tabular.cast_df <- function(xx,...)
 {
 	# a bunch of assumptions that must be met for this function to work:
 	if(!require(reshape)) stop("The {reshape} package must be installed for this function to work")
+	if(!require(tables)) stop("The {tables} package must be installed for this function to work")
 	if(! any(class(xx) == "cast_df")) stop("This function only works for cast_df objects")
 	# xx is a casted object
 
@@ -54,8 +55,7 @@ tabular.cast_df <- function(xx,...)
 
 
 
-
-
+if(F) {
 
 ###########################################
 ###### Examples
@@ -159,3 +159,5 @@ tabular.cast_df(cast(aqm, month*temp2*variable2 ~ ., c(mean,sd))) # same issue
                      # temp       81.000       NA
 	# ......
 
+
+}  # end of if(F)
