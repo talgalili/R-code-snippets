@@ -1,3 +1,9 @@
+# adding an an S3 method to tabular ...
+tabular <- function(...) UseMethod("tabular")
+tabular.default <- tables::tabular
+
+# This was tested on "tables" Version:	0.5
+
 tabular.cast_df <- function(xx,...)
 {
 	# a bunch of assumptions that must be met for this function to work:
