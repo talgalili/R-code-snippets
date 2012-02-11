@@ -11,7 +11,7 @@ merge.data.frame <- function (x, y, by = intersect(names(x), names(y)), by.x = b
 	# if we use the "keep_order" parameter, we might need to modify either the x or y data.frame objects: (either by placing 1 or "x", or by placing 2 or "y")
 	if(!missing(keep_order))
 	{
-		
+	
 		# some functions we will use soon:
 		add.id.column.to.data <- function(DATA)
 		{
@@ -39,11 +39,13 @@ merge.data.frame <- function (x, y, by = intersect(names(x), names(y)), by.x = b
 			# x2 <- add.id.column.to.data(x)[c(1,4,2,5,3),]
 			# x2
 			# order.by.id...and.remove.it(x2)
+		if(keep_order == "x") keep_order <- 1
+		if(keep_order == "y") keep_order <- 2
 
-		if(keep_order == 1 | keep_order == "x") x<-add.id.column.to.data(x)
-		if(keep_order == 2 | keep_order == "y") y<-add.id.column.to.data(y)
+		if(keep_order == 1) x<-add.id.column.to.data(x)
+		if(keep_order == 2) y<-add.id.column.to.data(y)
 		# if you didn't get 1 or 2 - issue a warning:
-		if(!(any(keep_order == c(1,2)) | any(keep_order == c("x","y"))) ) warning("The parameter 'keep_order' in the function merge.data.frame only accepts the values 1 (for the x data.frame) or 2 (for the y data.frame)")
+		if(!(any(keep_order == c(1,2)) ))  warning("The parameter 'keep_order' in the function merge.data.frame only accepts the values 1 (for the x data.frame) or 2 (for the y data.frame)")
 
 		# sort <- FALSE
 		# notice that if sort was TRUE, using the keep_order parameter will eventually override it...
