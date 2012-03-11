@@ -54,6 +54,18 @@ siegel.tukey <-function(x,y,id.col=TRUE,adjust.median=F,rnd=-1,alternative="two.
 # variability)
 # 5. Siegel-Tukey test (Wilcoxon test on tie-adjusted Siegel-Tukey ranks)
 
+is.formula <- function(x) class(x) == "formula"
+
+if(is.formula(x))
+{	
+	y <- do.call(c, list(as.name(all.vars(x)[2])), envir = parent.frame(2))
+	x <- do.call(c, list(as.name(all.vars(x)[1])), envir = parent.frame(2)) # I am using parent.frame(2) since if the name of the variable in the equation is "x", then we will mistakenly get the function in here instead of the vector.
+	id.col <- TRUE
+	# print(x)
+	# print(ls.str())
+	# data=data.frame(c(x,y),rep(c(0,1),c(length(x),length(y))))
+	# print(data)
+}
 
 if(id.col==FALSE){
   data=data.frame(c(x,y),rep(c(0,1),c(length(x),length(y))))
@@ -127,6 +139,11 @@ print(wilcox.test(ranks0,ranks1,alternative=alternative,mu=mu,paired=paired,exac
 
 
 
+
+
+
+
+
 if(F) {
 
 #Example:
@@ -143,7 +160,8 @@ siegel.tukey(x,y,F)
 
 x <- c(33, 62, 84, 85, 88, 93, 97, 4, 16, 48, 51, 66, 98)
 id <- c(0,0,0,0,0,0,0,1,1,1,1,1,1)
-
+siegel.tukey(x,id)
+siegel.tukey(x~id) # from now on, this also works as a function...
 siegel.tukey(x,id,adjust.median=F,exact=T)
 
 x<-c(0,0,1,4,4,5,5,6,6,9,10,10)
