@@ -60,23 +60,28 @@ if(id.col==FALSE){
   } else {
        data=data.frame(x,y)
   }
- names(data)=c("x","y")
- data=data[order(data$x),]
- if(rnd>-1){data$x=round(data$x,rnd)}
+names(data)=c("x","y")
+data=data[order(data$x),]
+if(rnd>-1){data$x=round(data$x,rnd)}
 
- if(adjust.median==T){
-       cat("\n","Adjusting medians...","\n",sep="")
-       data$x[data$y==0]=data$x[data$y==0]-(median(data$x[data$y==0]))
-       data$x[data$y==1]=data$x[data$y==1]-(median(data$x[data$y==1]))
- }
- cat("\n","Median of group 1 = ",median(data$x[data$y==0]),"\n",sep="")
- cat("Median of group 2 = ",median(data$x[data$y==1]),"\n","\n",sep="")
- cat("Testing median differences...","\n")
- print(wilcox.test(data$x[data$y==0],data$x[data$y==1]))
+if(adjust.median==T){
+   cat("\n","Adjusting medians...","\n",sep="")
+   data$x[data$y==0]=data$x[data$y==0]-(median(data$x[data$y==0]))
+   data$x[data$y==1]=data$x[data$y==1]-(median(data$x[data$y==1]))
+}
+cat("\n","Median of group 1 = ",median(data$x[data$y==0]),"\n",sep="")
+cat("Median of group 2 = ",median(data$x[data$y==1]),"\n","\n",sep="")
+cat("Testing median differences...","\n")
+print(wilcox.test(data$x[data$y==0],data$x[data$y==1]))
 
+# The following must be done for the case when id.col==F
+x <- data$x
+y <- data$y
 
- cat("Performing Siegel-Tukey rank transformation...","\n","\n")
+cat("Performing Siegel-Tukey rank transformation...","\n","\n")
 
+ 
+ 
 sort.x<-sort(data$x)
 sort.id<-data$y[order(data$x)]
 
@@ -128,8 +133,12 @@ if(F) {
  
 x=c(4,4,5,5,6,6)
 y=c(0,0,1,9,10,10)
- 
-siegel.tukey(x,y)
+siegel.tukey(x,y, F)
+
+# example for a non equal number of cases:
+x=c(4,4,5,5,6,6)
+y=c(0,0,1,9,10)
+siegel.tukey(x,y,F)
 
 
 x <- c(33, 62, 84, 85, 88, 93, 97, 4, 16, 48, 51, 66, 98)
