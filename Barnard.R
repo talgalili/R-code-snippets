@@ -121,6 +121,11 @@ Barnard <- function(data, Tbx = 100, to.plot = TRUE,
         points(np, PV1, col = 2)
     }
 }
+
+
+barnard.test <- Barnard # just so the option will be available...
+
+
 #Examples:
 # Convictions <-matrix(c(2, 10, 15, 3), nrow = 2, dimnames
 #   = list(c('Dizygotic', 'Monozygotic'), c('Convicted',
