@@ -1,7 +1,7 @@
-dotchart <- function (x, labels = NULL, groups = NULL, gdata = NULL, cex = par("cex"), 
+dotchart.with.add <- function (x, labels = NULL, groups = NULL, gdata = NULL, cex = par("cex"), 
     pch = 21, gpch = 21, bg = par("bg"), color = par("fg"), gcolor = par("fg"), 
     lcolor = "gray", xlim = range(x[is.finite(x)]), main = NULL, 
-    xlab = NULL, ylab = NULL, ...) 
+    xlab = NULL, ylab = NULL, add = F, ...) 
 {
     opar <- par("mai", "mar", "cex", "yaxs")
     on.exit(par(opar))
@@ -29,7 +29,7 @@ dotchart <- function (x, labels = NULL, groups = NULL, gdata = NULL, cex = par("
             x <- as.numeric(x)
         }
     }
-    plot.new()
+if(!add)    plot.new()
     linch <- if (!is.null(labels)) 
         max(strwidth(labels, "inch"), na.rm = TRUE)
     else 0
@@ -62,7 +62,7 @@ dotchart <- function (x, labels = NULL, groups = NULL, gdata = NULL, cex = par("
         y <- 1L:n + 2 * offset
         ylim <- range(0, y + 2)
     }
-    plot.window(xlim = xlim, ylim = ylim, log = "")
+if(!add) plot.window(xlim = xlim, ylim = ylim, log = "")
     lheight <- par("csi")
     if (!is.null(labels)) {
         linch <- max(strwidth(labels, "inch"), na.rm = TRUE)
@@ -78,16 +78,37 @@ dotchart <- function (x, labels = NULL, groups = NULL, gdata = NULL, cex = par("
             2) - 1)
         ginch <- max(strwidth(glabels, "inch"), na.rm = TRUE)
         goffset <- (max(linch + 0.2, ginch, na.rm = TRUE) + 0.1)/lheight
+if(!add) {
         mtext(glabels, side = 2, line = goffset, at = gpos, adj = 0, 
             col = gcolor, las = 2, cex = cex, ...)
+}
         if (!is.null(gdata)) {
             abline(h = gpos, lty = "dotted")
             points(gdata, gpos, pch = gpch, col = gcolor, bg = bg, 
                 ...)
         }
     }
+if(!add) {
     axis(1)
     box()
     title(main = main, xlab = xlab, ylab = ylab, ...)
+}
     invisible()
+}
+
+
+
+if(F) {
+# use the new function as the default function:
+dotchart <- dotchart.with.add
+
+# example:
+mean.values<-colMeans(VADeaths)
+mean.values<-apply(VADeaths, 2, mean)
+median.values<-apply(VADeaths, 2, median)
+
+#dotchart(VADeaths, gdata=median.values)
+dotchart(VADeaths, gdata=mean.values)
+dotchart(VADeaths, gdata=median.values, add=T, gcol = 2, gpch = 19)
+
 }
