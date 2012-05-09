@@ -21,3 +21,4 @@ source_https <- function(u, unlink.tmp.certs = FALSE) {
 
 # example:
 # source_https("https://raw.github.com/talgalili/R-code-snippets/master/tabular.cast_df.r")
+
