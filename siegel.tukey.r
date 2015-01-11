@@ -42,12 +42,12 @@ siegel.tukey <- function(x, y, id.col = FALSE, adjust.median = F,
     #   performed if it affects
     # the ranks of observations.
     
-    # … arguments passed on to the Wilcoxon test. See
+    # â€¦ arguments passed on to the Wilcoxon test. See
     #   ?wilcox.test
     
     # Value: Among other output, the function returns the data,
     #   the Siegel-Tukey
-    # ranks, the associated Wilcoxon’s W and the p-value for a
+    # ranks, the associated Wilcoxonâ€™s W and the p-value for a
     #   Wilcoxon test on
     # tie-adjusted Siegel-Tukey ranks (i.e., it performs and
     #   returns a
@@ -55,14 +55,14 @@ siegel.tukey <- function(x, y, id.col = FALSE, adjust.median = F,
     #   smaller rank sum has
     # greater variability.
     
-    # References: Sidney Siegel and John Wilder Tukey (1960) “A
+    # References: Sidney Siegel and John Wilder Tukey (1960) â€œA
     #   nonparametric sum
     # of ranks procedure for relative spread in unpaired
-    #   samples.” Journal of the
+    #   samples.â€ Journal of the
     # American Statistical Association. See also, David J.
     #   Sheskin (2004)
-    # ”Handbook of parametric and nonparametric statistical
-    #   procedures.” 3rd
+    # â€Handbook of parametric and nonparametric statistical
+    #   procedures.â€ 3rd
     # edition. Chapman and Hall/CRC. Boca Raton, FL.
     
     # Notes: The Siegel-Tukey test has relatively low power and
@@ -160,8 +160,8 @@ siegel.tukey <- function(x, y, id.col = FALSE, adjust.median = F,
     
     rank.matrix <- data.frame(unique.x, unique.ranks)
     
-    ST.matrix <- merge(data.matrix, rank.matrix, by.x = "sort.x", 
-        by.y = "unique.x")
+    ST.matrix <- data.frame(sort.x = data.matrix$sort.x, sort.id = data.matrix$sort.id, 
+							unique.ranks = rank.matrix$unique.ranks)
     
     print(ST.matrix)
     
